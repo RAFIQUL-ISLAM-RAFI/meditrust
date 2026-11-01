@@ -1,0 +1,25 @@
+{% extends "ui/base.html" %}
+{% block title %}{{ portal_name|default:"Partner" }} login · MediTrust{% endblock %}
+{% block content %}
+<form class="card auth" method="post" data-reveal>{% csrf_token %}
+  <h1>{{ portal_name|default:"Partner" }} login</h1>
+  <p>{% if portal %}Use your {{ portal_name|lower }} account.{% else %}Choose your portal or log in with your existing account.{% endif %}</p>
+
+  {{ form.non_field_errors }}
+  <input type="hidden" name="next" value="{{ next }}">
+
+  {% for field in form %}
+    <div class="field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+  {% endfor %}
+
+  <button class="btn full magnetic" type="submit">Log in</button>
+
+  <div class="sub login-options">
+    <a href="{% url 'ui:manufacturer_login' %}">Manufacturer</a>
+    <a href="{% url 'ui:retailer_login' %}">Pharmacy / retailer</a>
+    <a href="{% url 'ui:admin_login' %}">Administrator</a>
+  </div>
+
+  <p class="hint">No account? <a href="{% url 'ui:register' %}">Create one</a>. New organisations need administrator approval.</p>
+</form>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A1A15">
+<meta name="description" content="MediTrust — verify your medicine in seconds. Scan the QR on any pack to check its source, batch, expiry, recall and sale status.">
+<title>{% block title %}MediTrust{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'ui/mt.css' %}?v=20261025-v3">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></symbol>
+<symbol id="i-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.1"/></symbol>
+<symbol id="i-bad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M4 12h16"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></symbol>
+</defs></svg>
+
+<header class="top" id="site-header">
+  <div class="wrap">
+    <a class="brand" href="{% url 'ui:landing' %}">
+      <svg aria-hidden="true"><use href="#i-shield"/></svg>MediTrust
+    </a>
+    <nav aria-label="Main">
+      <a href="{% url 'ui:scan' %}" {% if request.resolver_match.url_name == 'scan' %}aria-current="page"{% endif %}>Scan</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'ui:dashboard' %}">Dashboard</a>
+        {% if user.is_staff %}<a href="/admin/">Admin tools</a>{% endif %}
+        <form method="post" action="{% url 'ui:logout' %}" class="navform">{% csrf_token %}<button type="submit">Log out</button></form>
+      {% else %}
+        <a href="{% url 'ui:manufacturer_login' %}">Manufacturer</a>
+        <a href="{% url 'ui:retailer_login' %}">Pharmacy</a>
+        <a href="{% url 'ui:login' %}">Log in</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="{% block main_class %}{% endblock %}">
+  {% block full_width %}
+  <div class="wrap">
+    {% for message in messages %}
+      <div role="status" class="card notice {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+  {% endblock %}
+</main>
+
+<footer class="site-footer noprint">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <svg aria-hidden="true"><use href="#i-shield"/></svg>MediTrust
+        </div>
+        <p class="footer-tagline">Verify your medicine. Trust your health.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="{% url 'ui:scan' %}">Scan</a>
+        <a href="{% url 'ui:scan' %}">Verify serial</a>
+      </div>
+      <div>
+        <h4>For partners</h4>
+        <a href="{% url 'ui:manufacturer_login' %}">Manufacturer</a>
+        <a href="{% url 'ui:retailer_login' %}">Pharmacy</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MediTrust</span>
+      <span>Made with care for patients</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{% static 'ui/animations.js' %}?v=20261025-v3" defer></script>
+{% block scripts %}{% endblock %}
+</body></html>

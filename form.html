@@ -1,0 +1,25 @@
+{% extends "ui/base.html" %}
+{% block title %}{{ title }} · MediTrust{% endblock %}
+{% block content %}
+<form class="card auth wide" method="post" data-reveal>{% csrf_token %}
+
+  <h1>{{ title }}</h1>
+
+  {{ form.non_field_errors }}
+
+  {% for field in form %}
+    <div class="field">
+      {{ field.label_tag }}
+      {{ field }}
+      {{ field.errors }}
+      {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+    </div>
+  {% endfor %}
+
+  <div class="actions" style="margin-top:1rem">
+    <button class="btn magnetic" type="submit">Save</button>
+    <a class="btn alt" href="{{ back }}">Cancel</a>
+  </div>
+
+</form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "ui/base.html" %}
+{% block title %}Approval pending · MediTrust{% endblock %}
+{% block content %}
+<section class="card auth wide" style="text-align:center" data-reveal>
+
+  <div class="seal" style="color:var(--warn);width:96px;height:96px">
+    <svg aria-hidden="true"><use href="#i-warn"/></svg>
+  </div>
+
+  <h1>Approval pending</h1>
+  <p style="max-width:52ch;margin:0 auto 1.75rem">
+    Your account is registered. An administrator needs to verify your organisation and licence before you can create, receive or sell stock.
+  </p>
+
+  <a class="btn alt" href="{% url 'ui:landing' %}">Back to home</a>
+
+</section>
+{% endblock %}

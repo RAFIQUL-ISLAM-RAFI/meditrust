@@ -1,0 +1,20 @@
+{% extends "ui/base.html" %}
+{% block title %}Page not found · MediTrust{% endblock %}
+{% block content %}
+<section class="card auth" style="text-align:center" data-reveal>
+
+  <div class="seal" style="color:var(--warn)">
+    <svg aria-hidden="true"><use href="#i-warn"/></svg>
+  </div>
+
+  <h1 style="font-size:2rem">Page not found</h1>
+  <p style="max-width:52ch;margin:0 auto 1.75rem">
+    This page does not exist. Check the address, or scan a pack again.
+  </p>
+
+  <div class="actions" style="justify-content:center">
+    <a class="btn" href="/">Back to home</a>
+  </div>
+
+</section>
+{% endblock %}
