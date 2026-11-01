@@ -1,0 +1,38 @@
+{% extends "ui/base.html" %}
+{% block title %}Receive {{ batch.batch_number }} · MediTrust{% endblock %}
+{% block content %}
+
+<div class="auth wide" data-reveal>
+
+  <h1 style="text-align:center">Receive {{ batch.batch_number }}?</h1>
+
+  <section class="card">
+    <dl>
+      <dt>Medicine</dt><dd>{{ batch.medicine.name }}</dd>
+      <dt>Made by</dt><dd>{{ batch.medicine.manufacturer }}</dd>
+      <dt>Pending strips</dt><dd>{{ qty }}</dd>
+      <dt>Expiry</dt><dd>{{ batch.expiry_date }}</dd>
+    </dl>
+  </section>
+
+  {% if qty %}
+    <p style="margin-top:1.5rem">
+      Confirm only if these details match the delivery in front of you. Ownership moves to your pharmacy after confirmation.
+    </p>
+
+    <form method="post" data-reveal data-delay="100">{% csrf_token %}
+      <div class="actions">
+        <button class="btn magnetic" type="submit">Confirm and receive</button>
+        <a class="btn alt" href="{% url 'ui:receive' %}">Cancel</a>
+      </div>
+    </form>
+  {% else %}
+    <p style="margin-top:1.5rem">No pending delivery for this batch is assigned to your pharmacy.</p>
+    <div class="actions">
+      <a class="btn alt" href="{% url 'ui:pharmacy' %}">Back to stock</a>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

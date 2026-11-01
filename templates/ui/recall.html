@@ -1,0 +1,41 @@
+{% extends "ui/base.html" %}
+{% block title %}Recall batch · MediTrust{% endblock %}
+{% block content %}
+<form class="card auth wide" method="post" data-reveal>{% csrf_token %}
+
+  <h1>Recall {{ batch.batch_number }}?</h1>
+  <p>{{ batch.medicine.name }} · {{ batch.units.count }} strips</p>
+
+  {% if batch.is_recalled %}
+    <div class="result bad" style="padding:1.5rem 1rem;margin-top:1rem">
+      <h3 style="color:var(--bad);margin-bottom:.5rem">Already recalled</h3>
+      <p style="margin:0">{{ batch.recall_reason }}</p>
+    </div>
+  {% else %}
+
+    <div class="notice" style="border-left:4px solid var(--warn);background:var(--warn-bg);color:var(--warn);margin-top:1rem">
+      <p style="margin:0"><b>Warning:</b> Every strip will immediately show a recall warning. Transfers, receipt and sales will be blocked. This action cannot be undone here.</p>
+    </div>
+
+    {{ form.non_field_errors }}
+
+    <div class="field" style="margin-top:1.25rem">
+      {{ form.recall_reason.label_tag }}
+      {{ form.recall_reason }}
+      {{ form.recall_reason.errors }}
+    </div>
+
+    <div class="actions">
+      <button class="btn danger magnetic" type="submit">Recall entire batch</button>
+      <a class="btn alt" href="{% url 'ui:dashboard' %}">Back</a>
+    </div>
+  {% endif %}
+
+  {% if batch.is_recalled %}
+    <div class="actions" style="margin-top:1.25rem">
+      <a class="btn alt" href="{% url 'ui:dashboard' %}">Back</a>
+    </div>
+  {% endif %}
+
+</form>
+{% endblock %}
