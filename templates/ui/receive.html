@@ -1,0 +1,30 @@
+{% extends "ui/base.html" %}
+{% block title %}Receive a batch · MediTrust{% endblock %}
+{% block content %}
+
+<div class="grid g2 scan-layout">
+
+  <div data-reveal="left">
+    <h1>Receive a batch</h1>
+    <p>Scan the signed carton QR on the delivery box.</p>
+    {% include "ui/_scanner.html" with scan_mode="receive" %}
+  </div>
+
+  <form class="card self-start" method="post" data-reveal="right" data-delay="100">{% csrf_token %}
+    <h2>Type the batch code</h2>
+    <p>Only deliveries assigned to your pharmacy can be received.</p>
+
+    {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+
+    <div class="field">
+      <label for="bc">Batch code or batch number</label>
+      <input id="bc" name="code" autocomplete="off" required>
+    </div>
+
+    <button class="btn full magnetic" type="submit">Find delivery</button>
+  </form>
+
+</div>
+
+{% endblock %}
+{% block scripts %}{% include "ui/_scanner_scripts.html" %}{% endblock %}

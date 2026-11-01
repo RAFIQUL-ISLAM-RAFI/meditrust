@@ -1,0 +1,139 @@
+{% extends "ui/base.html" %}
+{% block title %}Manufacturer · MediTrust{% endblock %}
+{% block content %}
+
+<h1 class="dashboard-title" data-reveal>Manufacturer dashboard</h1>
+<div class="sub" data-reveal data-delay="80">
+  <a class="btn alt sm magnetic" href="{% url 'ui:medicine_new' %}">+ Add a medicine</a>
+</div>
+
+<!-- ───── KPI stats ───── -->
+<div class="stats">
+  <div class="card stat" data-reveal data-delay="0">
+    <b data-counter="{{ total_units }}">0</b>
+    <span>Strips produced</span>
+  </div>
+  <div class="card stat" data-reveal data-delay="80">
+    <b data-counter="{{ supplied }}">0</b>
+    <span>Supplied to pharmacies</span>
+  </div>
+  <div class="card stat" data-reveal data-delay="160">
+    <b data-counter="{{ active_batches }}">0</b>
+    <span>Active batches</span>
+  </div>
+</div>
+
+<!-- ───── Create batch + supplied to ───── -->
+<div class="grid g2 section-gap">
+
+  <form class="card" method="post" action="{% url 'ui:create_batch' %}" data-reveal="left">
+    {% csrf_token %}
+    <h2>Create a batch</h2>
+    <p class="hint" style="margin-bottom:1.25rem">Each batch generates signed QR codes for every strip.</p>
+
+    {{ form.non_field_errors }}
+
+    <div class="grid g2 compact">
+      {% for field in form %}
+        <div class="field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<p class="hint">{{ field.help_text }}</p>{% endif %}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <button class="btn magnetic full" type="submit" style="margin-top:.5rem">
+      Create batch and QR codes
+    </button>
+  </form>
+
+  <section class="card" data-reveal="right" data-delay="80">
+    <h2>Supplied to</h2>
+    <p class="hint" style="margin-bottom:1.25rem">Pharmacies that have confirmed your deliveries.</p>
+
+    {% if supply %}
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr><th>Pharmacy</th><th style="text-align:right">Strips</th></tr>
+          </thead>
+          <tbody>
+            {% for row in supply %}
+              <tr>
+                <td>{{ row.to_user__organization_name|default:row.to_user__username }}</td>
+                <td style="text-align:right;font-weight:600">{{ row.n }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p class="hint" style="margin:0">No confirmed deliveries yet.</p>
+      </div>
+    {% endif %}
+  </section>
+
+</div>
+
+<!-- ───── Batches table ───── -->
+<section class="card section-gap" data-reveal>
+  <h2>Batches</h2>
+  <p class="hint" style="margin-bottom:1.25rem">All batches you have created. Expired and recalled batches cannot be transferred.</p>
+
+  {% if batches %}
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Batch</th>
+            <th>Medicine</th>
+            <th style="text-align:right">Qty</th>
+            <th>Expiry</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for batch in batches %}
+            <tr>
+              <td class="code">{{ batch.batch_number }}</td>
+              <td>{{ batch.medicine.name }}</td>
+              <td style="text-align:right;font-weight:600">{{ batch.qty }}</td>
+              <td>{{ batch.expiry_date }}</td>
+              <td>
+                {% if batch.is_recalled %}
+                  <span class="tag bad">Recalled</span>
+                {% elif batch.is_expired %}
+                  <span class="tag warn">Expired</span>
+                {% else %}
+                  <span class="tag ok">Active</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="actions">
+                  <a class="btn alt sm" href="{% url 'ui:qr_sheet' batch.pk %}">QR sheet</a>
+                  {% if not batch.is_recalled and not batch.is_expired %}
+                    <a class="btn sm" href="{% url 'ui:transfer_batch' batch.pk %}">Transfer</a>
+                  {% endif %}
+                  {% if not batch.is_recalled %}
+                    <a class="btn danger sm" href="{% url 'ui:recall_batch' batch.pk %}">Recall</a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p class="hint" style="margin-bottom:1rem">Add a medicine and create your first batch.</p>
+      <a class="btn sm magnetic" href="{% url 'ui:medicine_new' %}">+ Add a medicine</a>
+    </div>
+  {% endif %}
+</section>
+
+{% endblock %}

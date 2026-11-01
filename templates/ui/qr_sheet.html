@@ -1,0 +1,61 @@
+{% extends "ui/base.html" %}
+{% block title %}QR sheet {{ batch.batch_number }} · MediTrust{% endblock %}
+{% block content %}
+
+<!-- ───── Header (screen only) ───── -->
+<div class="noprint sub" style="align-items:center;gap:1rem" data-reveal>
+  <h1 class="dashboard-title" style="margin:0">QR sheet · {{ batch.batch_number }}</h1>
+  <div class="actions" style="margin-left:auto">
+    <button class="btn magnetic" type="button" onclick="window.print()">Print or save as PDF</button>
+    <a class="btn alt" href="{% url 'ui:manufacturer' %}">Back</a>
+  </div>
+</div>
+
+<!-- ───── QR address form (screen only) ───── -->
+<form class="card noprint" method="post" style="margin-top:1.5rem" data-reveal>{% csrf_token %}
+  <h2>QR address</h2>
+  <div class="field">
+    {{ form.base_url.label_tag }}
+    {{ form.base_url }}
+    {{ form.base_url.errors }}
+  </div>
+
+  {% if qr_locked %}
+    <p class="hint">This site's QR address is fixed by its administrator.</p>
+  {% else %}
+    <button class="btn alt sm" type="submit">Update QR address</button>
+  {% endif %}
+
+  <p class="hint">For phones, use a reachable HTTPS website or your PC's network address, with both devices on the same Wi-Fi. Reprint labels if the website address changes.</p>
+
+  {% if loopback %}
+    <p class="error" style="padding:.85rem 1rem;background:var(--bad-bg);border:1px solid var(--bad-line);border-radius:var(--r);margin-top:.75rem">
+      These QR codes currently open on this computer only. Set a phone-reachable website address above before printing for another device.
+    </p>
+  {% endif %}
+</form>
+
+<!-- ───── Carton QR ───── -->
+<section class="card section-gap carton" data-reveal>
+  <h2>Carton / batch QR</h2>
+  <img src="{% url 'ui:batch_qr' batch.batch_code %}" width="220" height="220" alt="Signed QR for receiving batch {{ batch.batch_number }}">
+  <p style="font-weight:700;font-size:1.1rem;margin:.75rem 0 .25rem">{{ batch.batch_number }}</p>
+  <p class="hint code">{{ batch.batch_code }}</p>
+</section>
+
+<!-- ───── Strips meta ───── -->
+<p class="hint" style="margin:1.5rem 0" data-reveal>
+  {{ units|length }} strips · {{ batch.medicine.name }} · expires {{ batch.expiry_date }}
+</p>
+
+<!-- ───── Per-strip QRs ───── -->
+<div class="qrs">
+  {% for unit in units %}
+    <figure>
+      <img src="{% url 'ui:unit_qr' unit.unique_hash_code %}" width="180" height="180" alt="Signed QR for {{ unit.serial_number }}">
+      <figcaption>{{ unit.serial_number }}</figcaption>
+    </figure>
+  {% endfor %}
+</div>
+
+{% endblock %}
