@@ -1,0 +1,127 @@
+{% extends "ui/base.html" %}
+{% block title %}MediTrust — Verify your medicine{% endblock %}
+{% block main_class %}has-hero{% endblock %}
+
+{% block full_width %}
+
+<!-- DARK HERO -->
+<section class="hero-v2">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+  </div>
+
+  <div class="wrap hero-inner">
+    <div class="hero-copy" data-reveal>
+
+      <!-- নতুন সার্টিফাইড ব্যাজ -->
+      <span class="eyebrow-certified">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ico" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        Trusted by pharmacies nationwide
+      </span>
+
+      <h1>
+        Know your medicine is <span class="grad">real</span> — before you take it.
+      </h1>
+      <p>Scan the QR on any pack. See its source, batch, expiry, recall and sale status in under 3&nbsp;seconds. No app, no account.</p>
+
+      <div class="hero-cta">
+        <a class="btn lg magnetic" href="{% url 'ui:scan' %}">
+          <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>
+          Scan a medicine
+        </a>
+        <a class="btn ghost lg" href="#how">
+          How it works
+          <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+
+      <div class="trust-row">
+        <span>✓ Signed QR codes</span>
+        <span>✓ Tamper-evident records</span>
+        <span>✓ No stock changes on check</span>
+      </div>
+    </div>
+
+    <div class="hero-visual" data-reveal="scale" data-delay="200">
+      <div class="glass-card">
+        <div class="seal-wrap">
+          <div class="seal-glow"></div>
+          <div class="seal" style="color:var(--primary);width:120px;height:120px;box-shadow:0 0 0 8px rgba(16,163,127,.2),0 10px 40px rgba(16,163,127,.4)">
+            <svg aria-hidden="true" style="width:52px;height:52px"><use href="#i-ok"/></svg>
+          </div>
+        </div>
+        <h3>Verified pack</h3>
+        <dl>
+          <div><dt>Medicine</dt><dd>Paracetamol 500 mg</dd></div>
+          <div><dt>Manufacturer</dt><dd>Acme Pharma Ltd.</dd></div>
+          <div><dt>Batch</dt><dd>AC-2026-04</dd></div>
+          <div><dt>Expires</dt><dd>Dec 2027</dd></div>
+          <div><dt>Pharmacy</dt><dd>Lakeside Pharmacy</dd></div>
+          <div><dt>Status</dt><dd><span class="tag ok">Saleable</span></dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="wrap" style="margin-top:-4rem;position:relative;z-index:5">
+  <div class="grid g2 compact">
+    <div class="card" data-reveal data-delay="0" style="text-align:center">
+      <b style="font:700 2.5rem/1 var(--d);color:var(--primary-deep);display:block;margin-bottom:.35rem" data-counter="32000">0</b>
+      <span style="color:var(--sub);font-size:.95rem">Packs verified</span>
+    </div>
+    <div class="card" data-reveal data-delay="100" style="text-align:center">
+      <b style="font:700 2.5rem/1 var(--d);color:var(--primary-deep);display:block;margin-bottom:.35rem" data-counter="180">0</b>
+      <span style="color:var(--sub);font-size:.95rem">Partner pharmacies</span>
+    </div>
+    <div class="card" data-reveal data-delay="200" style="text-align:center">
+      <b style="font:700 2.5rem/1 var(--d);color:var(--primary-deep);display:block;margin-bottom:.35rem" data-counter="99.9">0</b>
+      <span style="color:var(--sub);font-size:.95rem">% verified accuracy</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="wrap" id="how" style="padding-top:5rem">
+  <div style="text-align:center;max-width:640px;margin:0 auto 2rem" data-reveal>
+    <h2 style="font-size:clamp(1.7rem,3.5vw,2.4rem)">How a pack is protected</h2>
+    <p style="color:var(--sub);font-size:1.05rem;margin:0 auto">Three steps keep a medicine verifiable from factory to hand.</p>
+  </div>
+  <ol class="steps">
+    <li data-reveal data-delay="0">
+      <h3>Made and coded</h3>
+      <p>The manufacturer registers the batch and prints a signed QR on every strip.</p>
+    </li>
+    <li data-reveal data-delay="120">
+      <h3>Received by a pharmacy</h3>
+      <p>The pharmacy confirms delivery. Every strip is recorded under that pharmacy.</p>
+    </li>
+    <li data-reveal data-delay="240">
+      <h3>Checked by you</h3>
+      <p>See registered details, stock status, and any expiry, recall or reuse warning.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- CTA BANNER -->
+<section class="wrap" style="padding-top:5rem">
+  <div data-reveal style="
+      background:linear-gradient(135deg,#0A1A15 0%,#16342A 100%);
+      border-radius:24px;padding:3rem 2rem;text-align:center;color:#fff;
+      position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(10,26,21,.25)">
+    <div style="position:absolute;inset:-50% -20% auto auto;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(16,163,127,.25),transparent 70%);pointer-events:none"></div>
+    <h2 style="color:#fff;font-size:clamp(1.6rem,3.5vw,2.2rem);margin-bottom:.75rem;position:relative">Ready to check a pack?</h2>
+    <p style="color:rgba(255,255,255,.7);margin:0 auto 1.75rem;position:relative;max-width:46ch">Scan with your phone camera, or type the serial printed under the QR.</p>
+    <a class="btn lg magnetic" href="{% url 'ui:scan' %}" style="position:relative">
+      <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>Start scanning
+    </a>
+  </div>
+</section>
+
+{% endblock %}

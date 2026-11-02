@@ -1,0 +1,113 @@
+{% extends "ui/base.html" %}
+{% block title %}Admin overview · MediTrust{% endblock %}
+{% block content %}
+
+<h1 class="dashboard-title" data-reveal>Admin overview</h1>
+<div class="sub" data-reveal data-delay="80">
+  <a class="btn magnetic" href="/admin/core/user/">Manage organisations</a>
+  <a class="btn alt magnetic" href="/admin/">Admin tools</a>
+</div>
+
+<!-- ───── KPI stats ───── -->
+<div class="stats">
+  <div class="card stat" data-reveal data-delay="0">
+    <b data-counter="{{ units_total }}">0</b>
+    <span>Registered strips</span>
+  </div>
+  <div class="card stat" data-reveal data-delay="80">
+    <b data-counter="{{ users|length }}">0</b>
+    <span>Companies and pharmacies</span>
+  </div>
+</div>
+
+<!-- ───── Verification alerts ───── -->
+<section class="card section-gap" data-reveal>
+  <h2>Verification alerts</h2>
+  <p class="hint" style="margin-bottom:1.25rem">Every scan that fails signature, expiry or reuse checks lands here.</p>
+
+  {% if suspicious %}
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Code / serial</th>
+            <th>Result</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in suspicious %}
+            <tr>
+              <td style="white-space:nowrap">{{ entry.scanned_at }}</td>
+              <td class="code">{{ entry.unit.serial_number|default:entry.submitted_code }}</td>
+              <td>
+                <span class="tag {% if 'ok' in entry.verification_result|lower or 'valid' in entry.verification_result|lower %}ok{% elif 'warn' in entry.verification_result|lower or 'expired' in entry.verification_result|lower %}warn{% else %}bad{% endif %}">
+                  {{ entry.verification_result }}
+                </span>
+              </td>
+              <td class="code">{{ entry.location }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p class="hint" style="margin:0">No alerts recorded. Everything looks clean.</p>
+    </div>
+  {% endif %}
+</section>
+
+<!-- ───── Batch oversight ───── -->
+<section class="card" data-reveal>
+  <h2>Batch oversight</h2>
+  <p class="hint" style="margin-bottom:1.25rem">Recall a batch to instantly flag every strip under it.</p>
+
+  {% if batches %}
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Batch</th>
+            <th>Manufacturer</th>
+            <th>Medicine</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for batch in batches %}
+            <tr>
+              <td class="code">{{ batch.batch_number }}</td>
+              <td>{{ batch.medicine.manufacturer }}</td>
+              <td>{{ batch.medicine.name }}</td>
+              <td>
+                {% if batch.is_recalled %}
+                  <span class="tag bad">Recalled</span>
+                {% elif batch.is_expired %}
+                  <span class="tag warn">Expired</span>
+                {% else %}
+                  <span class="tag ok">Active</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if not batch.is_recalled %}
+                  <a class="btn danger sm" href="{% url 'ui:recall_batch' batch.pk %}">Recall batch</a>
+                {% else %}
+                  <span class="hint">Already recalled</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p class="hint" style="margin:0">No batches registered yet.</p>
+    </div>
+  {% endif %}
+</section>
+
+{% endblock %}
