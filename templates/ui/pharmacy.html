@@ -1,0 +1,98 @@
+{% extends "ui/base.html" %}
+{% block title %}Pharmacy · MediTrust{% endblock %}
+{% block content %}
+
+<h1 class="dashboard-title" data-reveal>Pharmacy dashboard</h1>
+<div class="sub" data-reveal data-delay="80">
+  <a class="btn alt sm" href="{% url 'ui:sales' %}">Sales history</a>
+</div>
+
+<div class="grid g2 section-gap">
+  <section class="card" data-reveal="left">
+    <h2>Receive a batch</h2>
+    <p>Scan the carton QR and confirm your assigned delivery.</p>
+    <a class="btn magnetic" href="{% url 'ui:receive' %}">
+      <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>Scan batch QR
+    </a>
+  </section>
+
+  <section class="card" data-reveal="right" data-delay="80">
+    <h2>Saleable stock</h2>
+    <div class="stats" style="margin-bottom:0">
+      <div class="stat"><b data-counter="{{ stock_count }}">0</b><span>Strips on shelf</span></div>
+      <div class="stat"><b data-counter="{{ tablets_left }}">0</b><span>Tablets left</span></div>
+    </div>
+  </section>
+</div>
+
+<section class="card section-gap" data-reveal>
+  <h2>Incoming deliveries</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>From</th><th>Batch</th><th>Strips</th></tr></thead>
+      <tbody>
+        {% for delivery in pending %}
+          <tr>
+            <td>{{ delivery.from_user__username }}</td>
+            <td>{{ delivery.unit__batch__batch_number }}</td>
+            <td>{{ delivery.n }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3" style="color:var(--sub)">No deliveries pending.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">Scan the signed carton QR or enter the batch number to confirm a delivery.</p>
+</section>
+
+<section class="card" data-reveal>
+  <h2>Your strips</h2>
+  <form class="find" method="get">
+    <div class="field">
+      <label for="q">Find serial, medicine or batch</label>
+      <input id="q" name="q" value="{{ q }}">
+    </div>
+    <button class="btn alt" type="submit">Search stock</button>
+  </form>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Serial</th><th>Medicine</th><th>Left / status</th><th>Record a sale</th></tr>
+      </thead>
+      <tbody>
+        {% for unit in page_obj %}
+          <tr>
+            <td><a href="{% url 'ui:verify' unit.unique_hash_code %}">{{ unit.serial_number }}</a></td>
+            <td>{{ unit.batch.medicine.name }}</td>
+            <td>
+              {{ unit.remaining }} of {{ unit.total_pills }}
+              {% if unit.batch.is_recalled %}<br><span class="tag bad">Recalled</span>
+              {% elif unit.batch.is_expired %}<br><span class="tag bad">Expired</span>
+              {% elif not unit.remaining %}<br><span class="tag warn">Sold out</span>{% endif %}
+            </td>
+            <td>
+              {% if unit.remaining > 0 and not unit.batch.is_recalled and not unit.batch.is_expired %}
+                <form class="sellrow" method="post" action="{% url 'ui:sell' unit.unique_hash_code %}">{% csrf_token %}
+                  <label class="sr" for="s{{ unit.pk }}">Tablets sold from {{ unit.serial_number }}</label>
+                  <input id="s{{ unit.pk }}" name="qty" type="number" min="1" max="{{ unit.remaining }}" value="1" required>
+                  <button class="btn sm" type="submit">Mark sold</button>
+                </form>
+              {% else %}
+                <span class="hint">Sale blocked</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4" style="color:var(--sub)">No matching stock.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include "ui/_pagination.html" %}
+  <p class="hint">Only your pharmacy can record sales. Public scans never change stock.</p>
+</section>
+
+{% endblock %}

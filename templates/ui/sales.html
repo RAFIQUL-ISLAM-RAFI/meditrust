@@ -1,0 +1,56 @@
+{% extends "ui/base.html" %}
+{% block title %}Sales history · MediTrust{% endblock %}
+{% block content %}
+
+<h1 class="dashboard-title" data-reveal>Sales history</h1>
+<div class="sub" data-reveal data-delay="80">
+  <a class="btn alt sm magnetic" href="{% url 'ui:pharmacy' %}">← Back to your stock</a>
+</div>
+
+<!-- ───── Total stat ───── -->
+<div class="stats">
+  <div class="card stat" data-reveal>
+    <b data-counter="{{ total }}">0</b>
+    <span>Tablets recorded as sold</span>
+  </div>
+</div>
+
+<!-- ───── Sales table ───── -->
+<section class="card" data-reveal data-delay="100">
+  <h2>Recorded sales</h2>
+  <p class="hint" style="margin-bottom:1.25rem">Every sale recorded by your pharmacy, newest first.</p>
+
+  {% if page_obj.object_list %}
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>When</th>
+            <th>Serial</th>
+            <th>Medicine</th>
+            <th style="text-align:right">Tablets</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sale in page_obj %}
+            <tr>
+              <td style="white-space:nowrap">{{ sale.sold_at }}</td>
+              <td class="code">{{ sale.unit.serial_number }}</td>
+              <td>{{ sale.unit.batch.medicine.name }}</td>
+              <td style="text-align:right;font-weight:600">{{ sale.quantity }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% include "ui/_pagination.html" %}
+
+  {% else %}
+    <div class="empty-state">
+      <p class="hint" style="margin:0">No recorded sales yet. Earlier cumulative stock totals are not individual sale records.</p>
+    </div>
+  {% endif %}
+</section>
+
+{% endblock %}
