@@ -1,0 +1,106 @@
+{% extends "ui/base.html" %}
+{% block title %}{{ result.title }} · MediTrust{% endblock %}
+{% block content %}
+
+<div class="verify-layout">
+
+  <!-- ───── Result header ───── -->
+  <section class="result {{ result.tone }}" aria-live="polite" data-reveal>
+    <div class="seal" role="img" aria-label="{{ result.title }}">
+      <svg><use href="#i-{% if result.tone == 'ok' %}ok{% elif result.tone == 'warn' %}warn{% else %}bad{% endif %}"/></svg>
+    </div>
+    <h1>{{ result.title }}</h1>
+    <p>{{ result.text }}</p>
+  </section>
+
+  {% if unit %}
+
+  <!-- ───── Medicine identity ───── -->
+  <section class="card section-gap" data-reveal data-delay="100">
+    <h2>{{ unit.batch.medicine.name }}</h2>
+    {% if unit.batch.medicine.generic_name %}
+      <p class="hint" style="margin-bottom:1.25rem">{{ unit.batch.medicine.generic_name }}</p>
+    {% endif %}
+
+    <dl>
+      <dt>Made by</dt><dd>{{ unit.batch.medicine.manufacturer }}</dd>
+      <dt>Batch</dt><dd class="code">{{ unit.batch.batch_number }}</dd>
+      <dt>Expiry</dt><dd>{{ unit.batch.expiry_date }}</dd>
+      <dt>Registered to</dt><dd>{{ unit.current_owner }}</dd>
+      <dt>Serial</dt><dd class="code">{{ unit.serial_number }}</dd>
+    </dl>
+
+    {% if unit.batch.is_recalled %}
+      <p class="error" style="margin-top:1rem;padding:.85rem 1rem;background:var(--bad-bg);border:1px solid var(--bad-line);border-radius:var(--r)">
+        <b>Recall reason:</b> {{ unit.batch.recall_reason }}
+      </p>
+    {% endif %}
+  </section>
+
+  <!-- ───── Stock strip ───── -->
+  <section class="card section-gap" data-reveal data-delay="150">
+    <div class="strip-meta">
+      <div>
+        <b data-counter="{{ unit.remaining }}">0</b>
+        <span>tablets left</span>
+      </div>
+      <div>
+        <b data-counter="{{ unit.sold_pills }}">0</b>
+        <span>already sold</span>
+      </div>
+      <div>
+        <b data-counter="{{ unit.total_pills }}">0</b>
+        <span>total in strip</span>
+      </div>
+    </div>
+
+    <div class="strip" role="img" aria-label="{{ unit.sold_pills }} sold, {{ unit.remaining }} left">
+      {% for i in "x"|ljust:unit.total_pills %}
+        {% if forloop.counter <= unit.sold_pills %}
+          <span class="pill sold"></span>
+        {% else %}
+          <span class="pill"></span>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p class="hint">Pharmacists record sales. Checking this page does not sell or consume the code.</p>
+  </section>
+
+  <!-- ───── Sell form (pharmacy only) ───── -->
+  {% if can_sell %}
+  <section class="card section-gap" data-reveal data-delay="200">
+    <h2>Record a sale</h2>
+    <form method="post" action="{% url 'ui:sell' unit.unique_hash_code %}">{% csrf_token %}
+      <div class="field">
+        <label for="qty">Tablets sold</label>
+        <input id="qty" name="qty" type="number" min="1" max="{{ unit.remaining }}" required>
+      </div>
+      <button class="btn magnetic" type="submit">Confirm sale</button>
+    </form>
+  </section>
+  {% endif %}
+
+  <!-- ───── Product information ───── -->
+  {% if unit.batch.medicine.composition or unit.batch.medicine.description or unit.batch.medicine.dosage_info or unit.batch.medicine.side_effects or unit.batch.medicine.precautions %}
+  <section class="card section-gap" data-reveal data-delay="250">
+    <h2>Manufacturer product information</h2>
+    {% if unit.batch.medicine.composition %}<h3 style="margin-top:1.25rem">Composition</h3><p>{{ unit.batch.medicine.composition|linebreaksbr }}</p>{% endif %}
+    {% if unit.batch.medicine.description %}<h3 style="margin-top:1.25rem">Description</h3><p>{{ unit.batch.medicine.description|linebreaksbr }}</p>{% endif %}
+    {% if unit.batch.medicine.dosage_info %}<h3 style="margin-top:1.25rem">Dosage information</h3><p>{{ unit.batch.medicine.dosage_info|linebreaksbr }}</p>{% endif %}
+    {% if unit.batch.medicine.side_effects %}<h3 style="margin-top:1.25rem">Side effects</h3><p>{{ unit.batch.medicine.side_effects|linebreaksbr }}</p>{% endif %}
+    {% if unit.batch.medicine.precautions %}<h3 style="margin-top:1.25rem">Precautions</h3><p>{{ unit.batch.medicine.precautions|linebreaksbr }}</p>{% endif %}
+  </section>
+  {% endif %}
+
+  {% endif %}
+
+  <!-- ───── Back to scan ───── -->
+  <div class="actions" style="justify-content:center;margin-top:1.5rem" data-reveal>
+    <a class="btn alt magnetic" href="{% url 'ui:scan' %}">
+      <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>
+      Scan another
+    </a>
+  </div>
+
+</div>
+{% endblock %}
