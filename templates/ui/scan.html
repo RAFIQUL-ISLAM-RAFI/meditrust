@@ -1,0 +1,26 @@
+{% extends "ui/base.html" %}
+{% block title %}Scan a medicine · MediTrust{% endblock %}
+
+{% block content %}
+<div class="grid g2 scan-layout">
+  <div data-reveal="left">
+    <h1>Scan a medicine</h1>
+    <p>Point your camera at the QR on the medicine strip. Keep the code still and well lit.</p>
+    {% include "ui/_scanner.html" %}
+  </div>
+
+  <form class="card self-start" method="post" data-reveal="right" data-delay="100">{% csrf_token %}
+    <h2>Use the printed serial</h2>
+    <p>Check the serial if the label is damaged or your camera is unavailable.</p>
+    {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+    <div class="field">
+      <label for="serial">Serial under the QR</label>
+      <input id="serial" name="code" value="{{ code }}" placeholder="MT-XXXXXXXXXX" autocomplete="off" required>
+    </div>
+    <button class="btn full magnetic" type="submit">Check serial</button>
+    <p class="hint">A manual lookup checks the registered serial. Scan the signed QR to check its signature.</p>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}{% include "ui/_scanner_scripts.html" %}{% endblock %}
