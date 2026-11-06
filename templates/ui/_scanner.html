@@ -1,0 +1,35 @@
+<div class="scanner" data-mode="{{ scan_mode|default:'verify' }}">
+  <div class="reader-wrap">
+    <div id="reader" class="reader" aria-label="QR camera preview"></div>
+    <p id="scan-status" class="hint scan-status" role="status" aria-live="polite">Loading scanner controls. If this message stays here, refresh the page.</p>
+  </div>
+
+  <div class="scanner-controls">
+    <button id="start" class="btn" type="button">
+      <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>
+      Start camera
+    </button>
+    <button id="stop" class="btn alt" type="button" disabled>Stop camera</button>
+  </div>
+
+  <div id="camera-choice" class="field" hidden>
+    <label for="camera">Camera</label>
+    <select id="camera"></select>
+  </div>
+
+  <div class="field upload">
+    <label for="qr-file">Or choose a QR image</label>
+    <input id="qr-file" type="file" accept="image/*">
+    <p class="hint">1. Choose a photo or screenshot. 2. Click Scan image below.</p>
+    <button id="scan-image" class="btn alt" type="button" disabled>
+      <svg class="ico" aria-hidden="true"><use href="#i-scan"/></svg>
+      <span>Scan image</span>
+    </button>
+    <figure id="qr-preview-box" class="qr-preview" hidden>
+      <img id="qr-preview" alt="Selected QR image preview">
+      <figcaption id="qr-file-name"></figcaption>
+    </figure>
+  </div>
+
+  <noscript><p>Enable JavaScript to scan, or use the printed-code form.</p></noscript>
+</div>
