@@ -1,3 +1,11 @@
+"""URL routes for the accounts app.
+
+All three portal-specific login routes (manufacturer / pharmacy / admin)
+reuse the single ``login_view`` — the ``{'portal': ...}`` dict is
+forwarded to the view, which enforces the expected role inside
+``RoleAuthenticationForm``. Keeping one view avoids duplicating the
+login logic for each role.
+"""
 from django.urls import path
 from . import views
 
