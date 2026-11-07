@@ -4,6 +4,7 @@
 <form class="card auth wide" method="post" data-reveal>{% csrf_token %}
   <h1>Add a medicine</h1>
   <p>Enter the registered product details. Guidance must come from the manufacturer's approved product information.</p>
+  
 
   {{ form.non_field_errors }}
 
@@ -22,3 +23,4 @@
   </div>
 </form>
 {% endblock %}
+
