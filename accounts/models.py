@@ -1,3 +1,10 @@
+"""Database models for MediTrust user accounts.
+
+Defines ``User`` — a custom ``AbstractUser`` that stores each account's
+organisation role (admin / manufacturer / retailer), drug licence number,
+organisation name, address and an ``is_verified`` flag. A custom manager
+auto-promotes superusers to admin and marks them verified.
+"""
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 
