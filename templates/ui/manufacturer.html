@@ -2,10 +2,12 @@
 {% block title %}Manufacturer · MediTrust{% endblock %}
 {% block content %}
 
+
 <h1 class="dashboard-title" data-reveal>Manufacturer dashboard</h1>
 <div class="sub" data-reveal data-delay="80">
   <a class="btn alt sm magnetic" href="{% url 'ui:medicine_new' %}">+ Add a medicine</a>
 </div>
+
 
 <! KPI stats >
 
@@ -23,6 +25,7 @@
     <span>Active batches</span>
   </div>
 </div>
+
 
 <!---  Create Brance + Supplied to  --->
 <div class="grid g2 section-gap">
@@ -78,6 +81,7 @@
   </section>
 
 </div>
+
 
 <!-- ───── Batches Table───── --->
 <section class="card section-gap" data-reveal>
@@ -137,4 +141,7 @@
   {% endif %}
 </section>
 
+
 {% endblock %}
+
+
