@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 
+
 def new_code():
     return uuid.uuid4().hex
 
@@ -82,3 +83,5 @@ class MedicineUnit(models.Model):
 
     class Meta:
         db_table = 'core_medicineunit'
+
+
