@@ -1,3 +1,11 @@
+"""Forms used by the accounts app.
+
+* ``RoleAuthenticationForm`` — login form that enforces the role expected
+  by the portal being used (manufacturer / pharmacy / admin), preventing
+  a user from logging into the wrong portal.
+* ``RegisterForm`` — public self-registration form; new accounts are
+  created unverified and must be approved by an administrator.
+"""
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .models import User
