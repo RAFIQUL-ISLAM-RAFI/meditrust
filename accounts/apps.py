@@ -1,3 +1,9 @@
+"""Django app configuration for the accounts package.
+
+Registers the app under the label ``core`` (to avoid clashing with
+Django's built-in ``accounts`` naming) and exposes a human-friendly
+name in the admin.
+"""
 from django.apps import AppConfig
 
 
