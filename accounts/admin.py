@@ -1,3 +1,10 @@
+"""Admin configuration for user accounts.
+
+Exposes organisation fields (role, licence, address, verified status) in
+the Django admin, adds filters for role and verification, and provides a
+bulk ``approve_organisations`` action so administrators can verify
+multiple organisations at once after checking their licences.
+"""
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import AdminUserCreationForm
