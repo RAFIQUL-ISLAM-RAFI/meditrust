@@ -1,3 +1,9 @@
+"""Structural sanity tests for the MediTrust project.
+
+Verifies that the three custom apps (accounts, medicines, tracking) are
+registered, collectively own seven models, and declare eleven foreign
+keys — matching the project specification.
+"""
 from django.apps import apps
 from django.db import models
 from django.test import SimpleTestCase
