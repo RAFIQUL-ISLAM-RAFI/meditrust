@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<!-- ───── QR address form (screen only) ───── -->
+<!--  QR address form (only screen)  -->
 <form class="card noprint" method="post" style="margin-top:1.5rem" data-reveal>{% csrf_token %}
   <h2>QR address</h2>
   <div class="field">
@@ -35,7 +35,7 @@
   {% endif %}
 </form>
 
-<!-- ───── Carton QR ───── -->
+<!-- ───── Carton QR Code ───── -->
 <section class="card section-gap carton" data-reveal>
   <h2>Carton / batch QR</h2>
   <img src="{% url 'ui:batch_qr' batch.batch_code %}" width="220" height="220" alt="Signed QR for receiving batch {{ batch.batch_number }}">
@@ -48,7 +48,7 @@
   {{ units|length }} strips · {{ batch.medicine.name }} · expires {{ batch.expiry_date }}
 </p>
 
-<!-- ───── Per-strip QRs ───── -->
+<!-- ───── Per-strip QRs Code ───── -->
 <div class="qrs">
   {% for unit in units %}
     <figure>
