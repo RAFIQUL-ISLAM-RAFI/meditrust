@@ -1,3 +1,14 @@
+"""View functions for authentication, registration and dashboard routing.
+
+Handles:
+* ``home``        — public landing page.
+* ``login_view``  — role-aware login shared by every portal URL.
+* ``logout_view`` — POST-only logout.
+* ``register``    — creates an unverified account awaiting admin approval.
+* ``dashboard``   — redirects verified users to the dashboard that matches
+                    their role; shows a pending page (403) otherwise.
+"""
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
